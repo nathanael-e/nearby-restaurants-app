@@ -15,7 +15,7 @@ export default function App () {
         } else if (location.status === 'denied'){
             return <Text>{'Access denied ...'}</Text>;
         } else {
-            return <Text>{'longitude: ' + location.longitude + ' latitude: ' + location.latitude}</Text>;
+            return <Text>{'test: ' + location.longitude + ' latitude: ' + location.latitude}</Text>;
         }
     };
 
