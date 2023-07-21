@@ -1,24 +1,27 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { colors } from './util/colors';
 import { useLongitudeLatitude } from './hooks/useLongitudeLatitude';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-export default function App() {
-    const [longitude, latitude, errorMsg] = useLongitudeLatitude();
-    const [text, setText] = useState('Waiting ...');
+export default function App () {
+    const location = useLongitudeLatitude();
 
-    useEffect(() => {
-        if(longitude && latitude) {
-            setText(longitude + ' ' + latitude);
-        } else if (errorMsg) {
-            setText(errorMsg);
+    useEffect(() => {}, [location]);
+
+    const getContent = (): React.ReactElement => {
+        if (location.status === 'pending') {
+            return <ActivityIndicator size="large" color={colors.steelblue} />;
+        } else if (location.status === 'denied'){
+            return <Text>{'Access denied ...'}</Text>;
+        } else {
+            return <Text>{'longitude: ' + location.longitude + ' latitude: ' + location.latitude}</Text>;
         }
-    }, [longitude, latitude, errorMsg]);
+    };
 
     return (
         <View style={styles.container}>
-            <Text>{text}</Text>
+            {getContent()}
             <StatusBar style="auto" />
         </View>
     );
@@ -27,7 +30,7 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        backgroundColor: colors.white,
+        backgroundColor: colors.whitesmoke,
         flex: 1,
         justifyContent: 'center',
     },

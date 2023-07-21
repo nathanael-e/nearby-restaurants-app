@@ -36,7 +36,11 @@
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "keyword-spacing": [
+            "error"
+        ],
+        "arrow-spacing": "error"
     },
     "settings": {
         "react": {
