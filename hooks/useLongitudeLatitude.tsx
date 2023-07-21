@@ -1,25 +1,39 @@
 import { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
 
-export const useLongitudeLatitude = (): [string, string, string, null | Location.LocationObject] => { 
-    const [longitude, setLongitude] = useState<string>('');
-    const [latitude, setLatitude] = useState<string>('');
-    const [errorMsg, setErrorMsg] = useState<string>('');
-    const [locationObject, setLocationObject] = useState<null | Location.LocationObject>(null);
+interface ILocation {
+    status: 'success' | 'denied' | 'pending',
+    longitude: number,
+    latitude: number,
+}
+
+const defaults:Pick<ILocation, 'longitude' | 'latitude'> = {
+    longitude: 0,
+    latitude: 0
+};
+
+
+export const useLongitudeLatitude = (): ILocation => {
+    const [location, setLocation] = useState<ILocation>({...defaults, status: 'pending'});
 
     useEffect(() => {
         (async () => {
             const { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
+                setLocation({
+                    ...defaults,
+                    status: 'denied',
+                });
                 return;
             }
             const location = await Location.getCurrentPositionAsync({});
-            setLongitude(location.coords.longitude.toString());
-            setLatitude(location.coords.latitude.toString());
-            setLocationObject(location);
+            setLocation({
+                status: 'success',
+                longitude: location.coords.longitude,
+                latitude: location.coords.latitude
+            });
         })();
     }, []);
 
-    return [longitude, latitude, errorMsg, locationObject];
+    return location;
 };
