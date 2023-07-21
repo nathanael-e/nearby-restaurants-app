@@ -15,7 +15,6 @@ const defaults:Pick<ILocation, 'longitude' | 'latitude'> = {
 
 export const useLongitudeLatitude = (): ILocation => {
     const [location, setLocation] = useState<ILocation>({...defaults, status: 'pending'});
-
     useEffect(() => {
         (async () => {
             const { status } = await Location.requestForegroundPermissionsAsync();
@@ -26,7 +25,7 @@ export const useLongitudeLatitude = (): ILocation => {
                 });
                 return;
             }
-            const location = await Location.getCurrentPositionAsync({});
+            const location = await Location.getCurrentPositionAsync({accuracy: Location.LocationAccuracy.Balanced});
             setLocation({
                 status: 'success',
                 longitude: location.coords.longitude,
@@ -34,6 +33,5 @@ export const useLongitudeLatitude = (): ILocation => {
             });
         })();
     }, []);
-
     return location;
 };
