@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
 
-interface ILocation {
+
+
+interface Token {
+    token: string
+}
+export interface ILocation {
     status: 'success' | 'denied' | 'pending',
     longitude: number,
     latitude: number,

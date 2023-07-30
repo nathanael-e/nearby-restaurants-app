@@ -40,7 +40,8 @@
         "keyword-spacing": [
             "error"
         ],
-        "arrow-spacing": "error"
+        "arrow-spacing": "error",
+        "react/prop-types": "off"
     },
     "settings": {
         "react": {
