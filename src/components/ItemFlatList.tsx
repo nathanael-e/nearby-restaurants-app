@@ -1,77 +1,90 @@
 import React, { useEffect, useState } from 'react';
-import { Animated, FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, ListRenderItem, RefreshControl, StyleSheet, View } from 'react-native';
 import { Hit } from '../hooks/getNearbyRestaurants';
+import { colors } from '../util/colors';
+import { getMainWindowPadding } from '../util/dimensions';
+import { CardBorder } from './CardBorder';
+import { CardImage } from './CardImage';
+
 
 interface ItemFlatListProps {
-  hits: Array<Hit>;
+  hits: Array<Hit>,
+  refreshCallback: () => Promise<void>
 }
 
-interface ItemViewProps {
-    item: Hit
-}
 
 const ItemSeparatorView = () => {
     return (
     //Item Separator
         <View
-            style={{ height: 0.5, width: '100%', backgroundColor: 'black' }}
+            style={styles.itemSeparator}
         />
     );
 };
 
-export const ItemFlatList: React.FC<ItemFlatListProps>  = ({hits}) => {
-
+export const ItemFlatList: React.FC<ItemFlatListProps>  = ({hits, refreshCallback}) => {
     const [listItems, setListItems] = useState<Array<Hit>>(hits);
-    //const translateX = useRef(new Animated.Value(Dimensions.get('window').height)).current; 
-    useEffect(() => {
-        //Animated.timing(translateX,{toValue:0, duration:2000, useNativeDriver: true}).start();
-    });
+    const [refresh, setRefresh] = useState<boolean>(true);
 
     useEffect(() => {
-        setListItems(hits);
+        (async () => {
+            setRefresh(false);
+            setListItems(hits);
+        })();
     }, [hits]);
 
-    const ItemView: React.FC<ItemViewProps> = ( {item} ) => {
-        return (
-        // Single Comes here which will be repeatative for the FlatListItems
-            <Animated.View >
-                <Text style={styles.item} onPress={() => getItem(item)}>
-                    {item.name}
-                </Text>
-            </Animated.View>
-        );
+    const onPullDown = async () => {
+        setRefresh(true);
+        await refreshCallback();
     };
 
-    const getItem = (item:Hit) => {
-        //Function for click on an item
-        alert('Id : ' + item.name + ' Value : ' + item.vicinity);
+    const itemView: ListRenderItem<Hit> = ( {item} ) => {
+        return (
+            <View style={styles.card}>
+                <CardImage hit={item}/>
+                <CardBorder hit={item} />
+            </View>
+        );
     };
 
     return (
         <View style={styles.container}>
             <FlatList
+                style={styles.flatList}
                 data={listItems}
+                renderItem={itemView}
                 ItemSeparatorComponent={ItemSeparatorView}
-                renderItem={ItemView}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={(item) => item.place_id}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                refreshControl={<RefreshControl refreshing={refresh} onRefresh={onPullDown}></RefreshControl>}
             />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    card: {
+        backgroundColor: colors.lightgray,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        elevation: 2,
+        shadowColor: colors.black,
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.80,
+        shadowRadius: 4.0
+    },
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        marginBottom: 10,
-        marginLeft: 10,
-        marginRight: 10,
-        marginTop: 0,
-    
+        ... getMainWindowPadding(),
     },
-    item: {
-        fontSize: 18,
-        height: 44,
-        padding: 10,
+    flatList: {
+        overflow: 'visible'
     },
+    itemSeparator: {
+        height: 15, 
+        width: '100%'
+    }
 });
