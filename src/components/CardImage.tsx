@@ -3,7 +3,7 @@ import { ActivityIndicator, ImageBackground, StyleSheet } from 'react-native';
 import { Hit } from '../hooks/getNearbyRestaurants';
 import { colors } from '../util/colors';
 import { getCardHeight, getCardWidth } from '../util/dimensions';
-import { BASE_API_URL, getHeader } from '../util/secureStore';
+import { BASE_API_URL, getToken } from '../util/secureStore';
 
 interface CardImageProps {
     hit: Hit
@@ -15,15 +15,13 @@ export const CardImage: React.FC<CardImageProps> = ({hit}) => {
 
     const source = {
         uri: `${BASE_API_URL}api/location/photo?photo_reference=${hit.photo?.photo_reference}` +
-       `&height=${getCardHeight()}&width=${getCardWidth()}`,
-        headers: {
-            Authorization: token,
-        }
+       `&height=${getCardHeight()}&width=${getCardWidth()}` +
+       `&token=${token}`
     };
     
     useEffect(() => {
         (async () => {
-            setToken(await getHeader());
+            setToken(await getToken());
         })();
     }, [hit]);
 
@@ -53,9 +51,9 @@ const styles = StyleSheet.create({
         top: '50%'
     },
     picture: {
-        height: '100%',
-        overflow: 'visible',
+        height: 200,
         position: 'relative',
+        width: '100%',
     },
     shadow: {
         shadowColor: colors.black,

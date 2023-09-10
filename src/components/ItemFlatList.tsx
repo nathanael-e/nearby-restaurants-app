@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, ListRenderItem, RefreshControl, StyleSheet, View } from 'react-native';
 import { Hit } from '../hooks/getNearbyRestaurants';
 import { colors } from '../util/colors';
-import { getCardHeight, getMainWindowPadding } from '../util/dimensions';
+import { getMainWindowPadding } from '../util/dimensions';
 import { CardBorder } from './CardBorder';
 import { CardImage } from './CardImage';
 
@@ -40,11 +40,9 @@ export const ItemFlatList: React.FC<ItemFlatListProps>  = ({hits, refreshCallbac
 
     const itemView: ListRenderItem<Hit> = ( {item} ) => {
         return (
-            <View style={styles.box}>
-                <View style={styles.card}>
-                    <CardImage hit={item}/>
-                </View>
-                <CardBorder hit={item}></CardBorder>
+            <View style={styles.card}>
+                <CardImage hit={item}/>
+                <CardBorder hit={item} />
             </View>
         );
     };
@@ -66,27 +64,20 @@ export const ItemFlatList: React.FC<ItemFlatListProps>  = ({hits, refreshCallbac
 };
 
 const styles = StyleSheet.create({
-    box: {
+    card: {
         backgroundColor: colors.lightgray,
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
+        elevation: 2,
         shadowColor: colors.black,
         shadowOffset: {
             width: 0,
             height: 4,
         },
         shadowOpacity: 0.80,
-        shadowRadius: 4.65,
-    },
-    card: {
-        backgroundColor: colors.lightgray,
-        flex: 1,
-        height: getCardHeight(),
-        position: 'relative',
+        shadowRadius: 4.0
     },
     container: {
-        display: 'flex',
-        flex: 1,
         ... getMainWindowPadding(),
     },
     flatList: {
