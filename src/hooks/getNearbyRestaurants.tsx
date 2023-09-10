@@ -13,7 +13,8 @@ export interface Hit {
     name: string,
     vicinity: string,
     place_id: string,
-    photo?: Photo
+    rating?: number,
+    photo: Photo,
 }
 
 export interface Hits {

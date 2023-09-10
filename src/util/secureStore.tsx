@@ -53,3 +53,11 @@ export const getHeader = async () : Promise<string> => {
         return '';
     }
 };
+
+export const getToken = async() : Promise<string> => {
+    try {
+        return await getValue();
+    } catch (error) {
+        return '';
+    }
+};
