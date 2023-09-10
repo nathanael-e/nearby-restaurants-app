@@ -58,8 +58,9 @@ export const getNearbyRestaurants = (location: ILocation): Hits => {
                     error: ''
                 });
             } catch (error) {
+                console.log(error);
                 if (error instanceof AxiosError) {
-                    console.log(error.response);
+                    console.log(error.toJSON());
                 }
                 setResponse({
                     ...defaults,
