@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, ImageBackground, StyleSheet } from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 import { Hit } from '../hooks/getNearbyRestaurants';
 import { colors } from '../util/colors';
 import { getCardHeight, getCardWidth } from '../util/dimensions';
 import { BASE_API_URL, getToken } from '../util/secureStore';
+import { ImageBackground } from 'expo-image';
 
 interface CardImageProps {
     hit: Hit
@@ -28,11 +29,9 @@ export const CardImage: React.FC<CardImageProps> = ({hit}) => {
     return ( 
         token ?
             <ImageBackground 
-                resizeMode='cover' 
                 style={styles.picture}
                 onLoadStart={() => setFetching(true)} 
                 onLoadEnd={() => setFetching(false)}
-                onError={(error) => console.log(error.nativeEvent.error)}
                 source={source}
             >
                 {fetching ? <ActivityIndicator style={styles.activityIndicator} size="large" color={colors.steelblue} /> : null }

@@ -25,18 +25,18 @@ export const CardBorder: React.FC<CardBorderProps> = ({hit}) => {
 
     return ( 
         <View style={styles.border}>
-            <View style={styles.row}>
+            <View style={styles.leftColumn}>
                 <Text style={styles.name}>
                     {hit.name}
                 </Text>
-                <View style={styles.stars}>
-                    {hit.rating ? createStars(hit.rating) : null}
-                </View>
-            </View>
-            <View style={styles.row}>
                 <Text style={styles.vicinity}>
                     {hit.vicinity}
                 </Text>
+            </View>
+            <View style={styles.rightColumn}>
+                <View style={styles.stars}>
+                    {hit.rating ? createStars(hit.rating) : null}
+                </View>
                 <Text style={styles.rating}>
                     {hit.rating ? 'Rating: ' + hit.rating : null }
                 </Text>
@@ -52,9 +52,15 @@ const styles = StyleSheet.create({
         borderColor: colors.steelblue,
         borderWidth: 0,
         bottom: 0,
+        flexDirection: 'row',
         height: getCardHeight() * 1/2,
         padding: 10,
-        position: 'relative',
+        position: 'relative'
+    },
+    leftColumn: {
+        alignItems: 'flex-start',
+        flex: 3,
+        flexDirection: 'column',
     },
     name: {
         color: colors.lightgray,
@@ -66,9 +72,10 @@ const styles = StyleSheet.create({
         fontFamily:'Oswald_400Regular',
         fontSize: 12
     },
-    row: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+    rightColumn: {
+        alignItems: 'flex-end',
+        flex: 1,
+        flexDirection: 'column',
     },
     stars: {
         flexDirection: 'row-reverse'

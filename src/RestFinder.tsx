@@ -10,7 +10,10 @@ export const RestFinder = () => {
     const [location, refresh]:[ILocation, () => Promise<void>] = useLongitudeLatitude();
     const response: Hits = getNearbyRestaurants(location);
 
-    useEffect(() => {}, [response]);
+    useEffect((
+    ) => {
+        console.log(response);
+    }, [response]);
 
     const render = () => {
         if (response.error) {
